@@ -1,5 +1,5 @@
 # SPAM
 
-Simple Pixel Art Make - spam creates pixel art images from simple text files.
+Simple Pixel Art Maker - spam creates pixel art images from simple text files.
 
 
