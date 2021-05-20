@@ -1,7 +1,11 @@
 // mod output;
 mod input;
+mod template;
 
 fn main() {
+
+    template::create_template("test_template", 8, 8);
+
     let input_file = "input".to_string();
 
     let input = input::input_from_file(input_file);
