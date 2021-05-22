@@ -60,7 +60,7 @@ fn main() {
     let name = "output.png";
 
     // Resize the image
-    let factor = 100;
+    let factor = 50;
     let dim = imgbuf.dimensions();
     let x = factor * dim.0;
     let y = factor * dim.1;
