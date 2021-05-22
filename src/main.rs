@@ -4,9 +4,9 @@ mod template;
 
 fn main() {
 
-    template::create_template("test_template", 8, 8);
+    // template::create_template("logo", 32, 8);
 
-    let input_file = "input".to_string();
+    let input_file = "logo".to_string();
 
     let input = input::input_from_file(input_file);
 
@@ -18,6 +18,7 @@ fn main() {
     let r = 'r';
     let g = 'g';
     let w = 'w';
+    let a = 'a';
 
 /*
     let input = [[t, b, t, b, t, b, t, b],
@@ -49,6 +50,8 @@ fn main() {
             *pixel = image::Rgba([0, 0, max, max]);
         } else if input[iny][inx] == w {
             *pixel = image::Rgba([max, max, max, max])
+        } else if input[iny][inx] == a {
+            *pixel = image::Rgba([0, 0, 0, max]);
         } else {
             *pixel = image::Rgba([0, 0, 0, 0]);
         }
