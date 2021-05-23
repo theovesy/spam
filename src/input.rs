@@ -3,11 +3,11 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 
-pub fn input_from_file(file_name: String) -> Vec<Vec<char>> {
+pub fn input_from_file(file_name: &String) -> Vec<Vec<char>> {
     let input: Vec<Vec<char>>;
 
     // Opening the input file
-    let path = Path::new(&file_name);
+    let path = Path::new(file_name);
 
     let mut file = match File::open(&path) {
         Err(why) => panic!("couldn't open input file: {}", why),
@@ -17,13 +17,13 @@ pub fn input_from_file(file_name: String) -> Vec<Vec<char>> {
     let mut s = String::new();
     match file.read_to_string(&mut s) {
         Err(why) => panic!("couldn't read input: {}", why),
-        Ok(_) => input = parse_input(s),
+        Ok(_) => input = parse_input(&s),
     }
 
     input
 }
 
-fn parse_input(s: String) -> Vec<Vec<char>> {
+fn parse_input(s: &String) -> Vec<Vec<char>> {
     println!("Input file:\n{}", s);
     let s = s.as_str();
     let lines = s.lines();

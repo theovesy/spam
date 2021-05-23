@@ -2,35 +2,61 @@
 mod input;
 mod template;
 
+use std::io;
+
 fn main() {
 
-    // template::create_template("logo", 32, 8);
+    let version = "0.0.1";
 
-    let input_file = "logo".to_string();
+    let mut input = String::new();
 
-    let input = input::input_from_file(input_file);
+    println!("Welcome to SPAM {}", version);
+    println!("(1) Generate template file");
+    println!("(2) Process text file");
+    println!("Choose an option...");
+
+    loop {
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read input");
+
+
+        if "1\n".to_string() == input {
+            input_template();
+            break
+        } else if "2\n".to_string() == input {
+            input_process();
+            break
+        } else {
+            println!("Choose a valid option");
+        }
+    }
+}
+
+fn input_template() {
+
+    println!("Choose the number of pixels");
+    //template::create_template("logo", 32, 8);
+}
+
+fn input_process() {
+    println!("Type the path to the file you want to process...");
+}
+
+fn process(name: String, resize_factor: u32) {
+
+
+    let input = input::input_from_file(&name);
 
     let imgx = input[0].len() as u32;
     let imgy = input.len() as u32;
 
-    let t = '.';
+    //let t = '.';
     let b = 'b';
     let r = 'r';
     let g = 'g';
     let w = 'w';
     let a = 'a';
-
-/*
-    let input = [[t, b, t, b, t, b, t, b],
-                [t, t, r, b, b, r, t, t],
-                [t, r, b, b, b, b, r, t],
-                [r, b, g, b, b, g, b, r],
-                [r, b, g, b, b, g, b, r],
-                [t, r, b, g, g, b, r, t],
-                [t, t, r, b, b, r, t, t],
-                [t, t, t, r, r, t, t, t]];
-*/
-
 
     let max: u8 = 255;
 
@@ -57,18 +83,17 @@ fn main() {
         }
     }
 
-    let name = "output.png";
 
     // Resize the image
-    let factor = 50;
+    let factor = resize_factor;
     let dim = imgbuf.dimensions();
     let x = factor * dim.0;
     let y = factor * dim.1;
     let resized = image::imageops::resize(&imgbuf, x, y, image::imageops::Nearest);
     // Save the image
-    resized.save(name).unwrap();
+    let output_name = format!("{}.png", &name);
+    resized.save(&output_name).unwrap();
 
-    println!("image save successfully as {}, it is of size {}x{}", name, x, y);
-
-    //output::save(&imgbuf, "output.png", 100);
+    println!("Image save successfully as {}, it is of size {}x{}", output_name, x, y);
 }
+

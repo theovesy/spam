@@ -4,10 +4,10 @@ use std::path::Path;
 
 pub fn create_template(name: &str, width: u32, height: u32) {
     let template = gen_template(width, height);
-    create_file(name, template);
+    create_file(name, &template);
 }
 
-fn create_file(name: &str, template: String) {
+fn create_file(name: &str, template: &String) {
     let path = Path::new(name);
     let display = path.display();
 
@@ -29,7 +29,7 @@ fn gen_template(width: u32, height: u32) -> String {
     let line: String= format!("{:.>n$}", "\n", n = width as usize).to_owned();
     let mut template: String = "".to_owned();
 
-    for i in 0..height {
+    for _i in 0..height {
         template.push_str(&line);
     }
 
