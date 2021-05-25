@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 
-pub fn input_from_file(file_name: &String) -> Vec<Vec<char>> {
+pub fn input_from_file(file_name: &str) -> Vec<Vec<char>> {
     let input: Vec<Vec<char>>;
 
     // Opening the input file

@@ -8,27 +8,22 @@ fn main() {
 
     let version = "0.0.1";
 
-    let mut input = String::new();
 
     println!("Welcome to SPAM {}", version);
     println!("(1) Generate template file");
     println!("(2) Process text file");
-    println!("Choose an option...");
 
     loop {
-        io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read input");
-
-
-        if "1\n".to_string() == input {
-            input_template();
-            break
-        } else if "2\n".to_string() == input {
-            input_process();
-            break
-        } else {
-            println!("Choose a valid option");
+        match &get_console_input("Choose and operation...")[..] {
+            "1\n" => {
+                input_template();
+                break
+            },
+            "2\n" => {
+                input_process();
+                break
+            },
+            _ => println!("Option is not valid!"),
         }
     }
 }
@@ -36,17 +31,59 @@ fn main() {
 fn input_template() {
 
     println!("Choose the number of pixels");
-    //template::create_template("logo", 32, 8);
+    let width: u32;
+    let height: u32;
+
+    loop {
+        width = match get_console_input("Width...").trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+        break;
+    }
+    loop {
+        height = match get_console_input("Height...").trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+        break;
+    }
+    let name = get_console_input("Name the file...");
+    let name = name.trim();
+
+    template::create_template(&name, width, height);
 }
 
 fn input_process() {
-    println!("Type the path to the file you want to process...");
+    let path = get_console_input("Type the path to the file you want to process...");
+    let path = path.trim();
+
+    let resize_factor: u32;
+
+    loop {
+        resize_factor = match get_console_input("How much should I resize the image ? \n (for example : 2 will make the image twice as big)...").trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+        break;
+    }
+
+    process(path, resize_factor);
 }
 
-fn process(name: String, resize_factor: u32) {
+fn get_console_input(message: &str) -> String {
+    let mut input = String::new();
+    println!("{}", message);
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read input");
+    input
+}
+
+fn process(name: &str, resize_factor: u32) {
 
 
-    let input = input::input_from_file(&name);
+    let input = input::input_from_file(name);
 
     let imgx = input[0].len() as u32;
     let imgy = input.len() as u32;
@@ -91,7 +128,7 @@ fn process(name: String, resize_factor: u32) {
     let y = factor * dim.1;
     let resized = image::imageops::resize(&imgbuf, x, y, image::imageops::Nearest);
     // Save the image
-    let output_name = format!("{}.png", &name);
+    let output_name = format!("{}.png", name);
     resized.save(&output_name).unwrap();
 
     println!("Image save successfully as {}, it is of size {}x{}", output_name, x, y);
