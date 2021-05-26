@@ -6,7 +6,7 @@ use std::io;
 
 fn main() {
 
-    let version = "0.0.1";
+    let version = "1.0";
 
 
     println!("Welcome to SPAM {}", version);
@@ -15,11 +15,11 @@ fn main() {
 
     loop {
         match &get_console_input("Choose and operation...")[..] {
-            "1\n" => {
+            "1" => {
                 input_template();
                 break
             },
-            "2\n" => {
+            "2" => {
                 input_process();
                 break
             },
@@ -77,7 +77,7 @@ fn get_console_input(message: &str) -> String {
     io::stdin()
         .read_line(&mut input)
         .expect("Failed to read input");
-    input
+    input.trim().to_string()
 }
 
 fn process(name: &str, resize_factor: u32) {
