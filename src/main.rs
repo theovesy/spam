@@ -1,15 +1,17 @@
 // mod output;
 mod input;
 mod template;
+mod gui;
 
 use std::io;
 
 fn main() {
+    gui::run_gui();
+}
 
-    let version = "1.0";
-
-
-    println!("Welcome to SPAM {}", version);
+fn cmd_ui()
+{
+    println!("Welcome to SPAM");
     println!("(1) Generate template file");
     println!("(2) Process text file");
 
