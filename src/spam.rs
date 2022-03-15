@@ -43,11 +43,11 @@ fn gen_template(width: u32, height: u32) -> String {
 // ====================
 // Read input file 
 // ====================
-pub fn input_from_file(file_name: &str) -> Vec<Vec<char>> {
+fn input_from_file(file_name: &String) -> Vec<Vec<char>> {
     let input: Vec<Vec<char>>;
 
     // Opening the input file
-    let path = Path::new(file_name);
+    let path = Path::new(file_name as &str);
 
     let mut file = match File::open(&path) {
         Err(why) => panic!("couldn't open input file: {}", why),
@@ -103,7 +103,14 @@ fn parse_input(s: &String) -> Vec<Vec<char>> {
 // ======================================
 // Process input file and output image 
 // ======================================
-pub fn process(input: &Vec<Vec<char>>, name: &str, resize_factor: u32) {
+pub fn process_file(input: &String, output: &String, resize: u32) -> bool
+{
+    let parsed_input = parse_input(input);
+    process(&parsed_input, output, resize);
+    true
+}
+
+fn process(input: &Vec<Vec<char>>, name: &String, resize_factor: u32) {
 
     let imgx = input[0].len() as u32;
     let imgy = input.len() as u32;
