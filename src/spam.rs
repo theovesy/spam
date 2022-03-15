@@ -105,12 +105,13 @@ fn parse_input(s: &String) -> Vec<Vec<char>> {
 // ======================================
 pub fn process_file(input: &String, output: &String, resize: u32) -> bool
 {
-    let parsed_input = parse_input(input);
-    process(&parsed_input, output, resize);
+    process(input, output, resize);
     true
 }
 
-fn process(input: &Vec<Vec<char>>, name: &String, resize_factor: u32) {
+fn process(input: &String, output: &String, resize_factor: u32) {
+
+    let input = input_from_file(input);
 
     let imgx = input[0].len() as u32;
     let imgy = input.len() as u32;
@@ -155,7 +156,7 @@ fn process(input: &Vec<Vec<char>>, name: &String, resize_factor: u32) {
     let y = factor * dim.1;
     let resized = image::imageops::resize(&imgbuf, x, y, image::imageops::Nearest);
     // Save the image
-    let output_name = format!("{}.png", name);
+    let output_name = format!("{}.png", output);
     resized.save(&output_name).unwrap();
 
     println!("Image save successfully as {}, it is of size {}x{}", output_name, x, y);

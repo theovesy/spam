@@ -92,7 +92,7 @@ impl epi::App for SpamApp {
                 });
 
                 ui.horizontal(|ui|{
-                    ui.label("Path to outputfile");
+                    ui.label("Path to outputfile (without extension)");
                     ui.text_edit_singleline(&mut self.output_path); 
                 });
 
