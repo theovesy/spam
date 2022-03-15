@@ -1,138 +1,84 @@
-// mod output;
-mod input;
-mod template;
-mod gui;
+mod spam;
 
-use std::io;
+use eframe::{epi, egui};
 
-fn main() {
-    gui::run_gui();
+struct SpamApp {
+    //resize: u32,
+    template_width: u32,
+    template_height: u32,
+    aspect_ratio: f32,
+    use_aspect: bool,
+    template_path: String,
+    template_success: bool,
 }
 
-fn cmd_ui()
+impl Default for SpamApp
 {
-    println!("Welcome to SPAM");
-    println!("(1) Generate template file");
-    println!("(2) Process text file");
-
-    loop {
-        match &get_console_input("Choose and operation...")[..] {
-            "1" => {
-                input_template();
-                break
-            },
-            "2" => {
-                input_process();
-                break
-            },
-            _ => println!("Option is not valid!"),
+    fn default() -> Self
+    {
+        Self {
+            //resize: 1,
+            template_width: 8,
+            template_height: 8,
+            aspect_ratio: 1.0,
+            use_aspect: true,
+            template_path: String::from("template.txt"),
+            template_success: false,
         }
     }
 }
 
-fn input_template() {
-
-    println!("Choose the number of pixels");
-    let width: u32;
-    let height: u32;
-
-    loop {
-        width = match get_console_input("Width...").trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
-        break;
-    }
-    loop {
-        height = match get_console_input("Height...").trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
-        break;
-    }
-    let name = get_console_input("Name the file...");
-    let name = name.trim();
-
-    template::create_template(&name, width, height);
-}
-
-fn input_process() {
-    let path = get_console_input("Type the path to the file you want to process...");
-    let path = path.trim();
-
-    let resize_factor: u32;
-
-    loop {
-        resize_factor = match get_console_input("How much should I resize the image ? \n (for example : 2 will make the image twice as big)...").trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
-        break;
+impl epi::App for SpamApp {
+    fn name(&self) -> &str {
+        "spam"
     }
 
-    process(path, resize_factor);
-}
+    fn update(&mut self, ctx: &egui::Context, frame: &epi::Frame) {
+        ctx.set_visuals(egui::Visuals::dark());
 
-fn get_console_input(message: &str) -> String {
-    let mut input = String::new();
-    println!("{}", message);
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read input");
-    input.trim().to_string()
-}
+        egui::CentralPanel::default().show(ctx, |ui| {
+            ui.heading("Template");
 
-fn process(name: &str, resize_factor: u32) {
+            ui.horizontal(|ui| {
+                ui.label("width");
+                ui.add(egui::DragValue::new(&mut self.template_width));
+                ui.label("height");
+                ui.add(egui::DragValue::new(&mut self.template_height));
+                if self.use_aspect
+                {
+                    ui.label("aspect ratio");
+                    ui.add(egui::DragValue::new(&mut self.aspect_ratio));
+                    self.template_height = (self.aspect_ratio * self.template_width as f32) as u32;
+                }
+            });
+            ui.checkbox(&mut self.use_aspect, "Use aspect ratio");
 
+            ui.horizontal(|ui|{
+                ui.label("Path to file");
+                ui.text_edit_singleline(&mut self.template_path); 
+            });
 
-    let input = input::input_from_file(name);
-
-    let imgx = input[0].len() as u32;
-    let imgy = input.len() as u32;
-
-    //let t = '.';
-    let b = 'b';
-    let r = 'r';
-    let g = 'g';
-    let w = 'w';
-    let a = 'a';
-
-    let max: u8 = 255;
-
-    // Create a new ImgBuf
-    let mut imgbuf = image::ImageBuffer::new(imgx, imgy);
-
-    // Iterate over the coordinates and pixels of the image
-    for (x, y, pixel) in imgbuf.enumerate_pixels_mut() {
-        let inx: usize = x as usize;
-        let iny: usize = y as usize;
-
-        if input[iny][inx] == r {
-            *pixel = image::Rgba([max, 0, 0, max]);
-        } else if input[iny][inx] == g {
-            *pixel = image::Rgba([0, max, 0, max]);
-        } else if input[iny][inx] == b {
-            *pixel = image::Rgba([0, 0, max, max]);
-        } else if input[iny][inx] == w {
-            *pixel = image::Rgba([max, max, max, max])
-        } else if input[iny][inx] == a {
-            *pixel = image::Rgba([0, 0, 0, max]);
-        } else {
-            *pixel = image::Rgba([0, 0, 0, 0]);
-        }
+            if ui.button("Create template").clicked()
+            {
+                self.template_success = spam::create_template(&self.template_path, self.template_width, self.template_height);
+            }
+            
+            //TODO : template_success = false when any value above is changed
+            if self.template_success
+            {
+                ui.label("Template successfuly exported.");
+            }
+        });
     }
-
-
-    // Resize the image
-    let factor = resize_factor;
-    let dim = imgbuf.dimensions();
-    let x = factor * dim.0;
-    let y = factor * dim.1;
-    let resized = image::imageops::resize(&imgbuf, x, y, image::imageops::Nearest);
-    // Save the image
-    let output_name = format!("{}.png", name);
-    resized.save(&output_name).unwrap();
-
-    println!("Image save successfully as {}, it is of size {}x{}", output_name, x, y);
 }
 
+fn run_gui()
+{
+    println!("gui is running...");
+    let app = SpamApp::default();
+    let native_options = eframe::NativeOptions::default();
+    eframe::run_native(Box::new(app), native_options); 
+}
+fn main() {
+    run_gui();
+}
