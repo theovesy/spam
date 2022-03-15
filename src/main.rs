@@ -35,6 +35,7 @@ impl epi::App for SpamApp {
 
     fn update(&mut self, ctx: &egui::Context, frame: &epi::Frame) {
         ctx.set_visuals(egui::Visuals::dark());
+        frame.set_window_size(egui::Vec2{x: 512.0, y: 256.0});
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Template");
