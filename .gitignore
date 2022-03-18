@@ -3,3 +3,4 @@ todo.md
 Cargo.lock
 *.txt
 release
+output.png

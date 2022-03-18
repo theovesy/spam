@@ -32,7 +32,7 @@ impl Default for SpamApp
 
             process_path: String::new(),
             process_resize: 10,
-            output_path: String::new(),
+            output_path: String::from("output"),
             output_success: false,
         }
     }
