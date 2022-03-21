@@ -2,6 +2,10 @@ mod spam;
 
 use eframe::{epi, egui};
 
+fn main() {
+    run_gui();
+}
+
 struct SpamApp {
     //resize: u32,
     template_width: u32,
@@ -117,7 +121,4 @@ fn run_gui()
     let app = SpamApp::default();
     let native_options = eframe::NativeOptions::default();
     eframe::run_native(Box::new(app), native_options); 
-}
-fn main() {
-    run_gui();
 }
