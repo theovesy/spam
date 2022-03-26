@@ -13,7 +13,6 @@ pub fn create_template(name: &str, width: u32, height: u32) -> bool {
 
 fn create_file(name: &str, template: &String) {
     let path = Path::new(name);
-    let display = path.display();
 
     // Open a file in read only mode
     let mut file = match File::create(&path) {
@@ -24,7 +23,7 @@ fn create_file(name: &str, template: &String) {
     // Write the string to file
     match file.write_all(template.as_bytes()) {
         Err(why) => panic!("Couldn't write to template file: {}", why),
-        Ok(_) => eprint!("Template file successfully created as {}", display),
+        Ok(_) => (), 
     };
 }
 
@@ -64,7 +63,6 @@ fn input_from_file(file_name: &String) -> Vec<Vec<char>> {
 }
 
 fn parse_input(s: &String) -> Vec<Vec<char>> {
-    // eprintln!("Input file:\n{}", s);
     let s = s.as_str();
     let lines = s.lines();
     // Getting the longuest line's length
@@ -158,7 +156,5 @@ fn process(input: &String, output: &String, resize_factor: u32) {
     // Save the image
     let output_name = format!("{}.png", output);
     resized.save(&output_name).unwrap();
-
-    eprint!("Image save successfully as {}, it is of size {}x{}", output_name, x, y);
 }
 
