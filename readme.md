@@ -43,3 +43,10 @@ It offers two functionnalities :
 Don't worry if some line or columns of source file are not the same length, spam will fill the blanks with transparent pixels.
 In fact, the source text file can be of any size, spam will read the number of pixel you wrote.
 
+# Future improvements
+
+* Cleanup cli/main
+* Implement palettes with flexible configuration file mapping ascii (or unicode even) to colors
+* Make a better logo with palettes
+* Documentation
+
